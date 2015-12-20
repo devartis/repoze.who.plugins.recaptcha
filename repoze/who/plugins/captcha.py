@@ -4,10 +4,11 @@
 from recaptcha.client import captcha
 
 from paste.httpexceptions import HTTPUnauthorized
-from paste.request import parse_formvars
 
 from zope.interface import implements
 from repoze.who.interfaces import IAuthenticator
+
+import webob
 
 class RecaptchaPlugin(object):
 
@@ -32,8 +33,7 @@ class RecaptchaPlugin(object):
                 log.debug('no recapcha validation needed.')
                 return None
 
-
-        form = parse_formvars(environ)
+        form = webob.Request(environ).str_POST
 
         # get form data
         captcha_challenge = form.get('recaptcha_challenge_field')
